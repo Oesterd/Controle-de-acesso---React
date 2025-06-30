@@ -1,0 +1,38 @@
+form {
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  border-radius: 5px;
+  border: 1px solid gray;
+  height: 25px;
+  width: 250px;
+}
+
+button {
+  width: 250px;
+  height: 40px;
+  background-color: rgb(30, 97, 241);
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+span {
+  color: red;
+  position: absolute;
+  margin-top: 50px;
+}
