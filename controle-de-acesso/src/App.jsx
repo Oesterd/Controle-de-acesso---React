@@ -1,35 +1,13 @@
-import { useForm, Controller } from "react-hook-form";
-import Cleave from "cleave.js/react";
+import Formulario from "./Formulario";
 
-function App() {
-  const { control, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {
-    console.log("Dados:", data);
-  };
-
+function App () {
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>CPF</label>
-      <Controller
-        name="cpf"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Cleave
-            {...field}
-            options={{
-              delimiters: [".", ".", "-"],
-              blocks: [3, 3, 3, 2],
-              numericOnly: true,
-            }}
-            placeholder="000.000.000-00"
-          />
-        )}
-      />
-      <button type="submit">Enviar</button>
-    </form>
-  );
+    <div>
+      <h1>Título</h1>
+      <Formulario/>
+    </div>
+  )
 }
 
 export default App;
+
