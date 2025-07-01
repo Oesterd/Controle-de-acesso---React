@@ -1,13 +1,15 @@
 import Formulario from "./Formulario";
+import "./App.css";
 
-function App () {
+function App() {
   return (
-    <div>
-      <h1>Título</h1>
-      <Formulario/>
+    <div className="app-page">
+      <h1 className="titulo">Título</h1>
+      <div className="app-container">
+        <Formulario />
+      </div>
     </div>
-  )
+  );
 }
 
 export default App;
-

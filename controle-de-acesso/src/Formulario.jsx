@@ -5,47 +5,45 @@ function Formulario() {
   const { control, handleSubmit, watch } = useForm();
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
- const onSubmit = async (data) => {
-  console.log("Antes da conversão:", data.dataNascimento);
+  const onSubmit = async (data) => {
+    console.log("Antes da conversão:", data.dataNascimento);
 
-  if (data.dataNascimento && data.dataNascimento.includes("-")) {
-    const [d, m, y] = data.dataNascimento.split("-");
-    if (d.length === 2 && m.length === 2 && y.length === 4) {
-      data.dataNascimento = `${y}-${m}-${d}`;
-    }
-  }
-
-  console.log("Depois da conversão:", data.dataNascimento); // DEVE mostrar: 1990-04-29
-
-  try {
-    const response = await fetch("http://localhost:8080/api/person/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const msg = await response.text();
-      throw new Error(msg || "Erro ao enviar dados");
+    if (data.dataNascimento && data.dataNascimento.includes("-")) {
+      const [d, m, y] = data.dataNascimento.split("-");
+      if (d.length === 2 && m.length === 2 && y.length === 4) {
+        data.dataNascimento = `${y}-${m}-${d}`;
+      }
     }
 
-    alert("Pessoa cadastrada com sucesso!");
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Erro ao cadastrar: " + error.message);
-  }
-};
+    console.log("Depois da conversão:", data.dataNascimento); // DEVE mostrar: 1990-04-29
 
+    try {
+      const response = await fetch("http://localhost:8080/api/person/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(msg || "Erro ao enviar dados");
+      }
+
+      alert("Pessoa cadastrada com sucesso!");
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao cadastrar: " + error.message);
+    }
+  };
 
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        background: "#f5f5f5",
+        width: "100%",
       }}
     >
       <form

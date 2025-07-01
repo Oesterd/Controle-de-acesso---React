@@ -1,32 +1,64 @@
-form {
-  width: 500px;
-  margin: 30px auto;
-  text-align: center;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+/* Container geral da página */
+.app-page {
+  height: 100vh;
+  width: 100vw; /* ✅ garante que ocupe toda a largura */
+  background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  
-}
-
-form input {
-  margin-bottom: 5px
-}
-
-form input [type='button'] {
-  margin-right: 10px;
-}
-
-label {
-  text-align: left;
+  align-items: center;
   justify-content: center;
 }
 
-select {
-  height: 30px;
-}
 
-h1 {
+/* Centraliza só o formulário */
+.app-container {
   display: flex;
-  text-align: center;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Formulário visual */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.formulario input,
+.formulario select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.formulario button {
+  padding: 10px;
+  font-weight: bold;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.formulario button:hover {
+  background-color: #45a049;
+}
+
+.titulo {
+  margin-bottom: 20px;
 }
