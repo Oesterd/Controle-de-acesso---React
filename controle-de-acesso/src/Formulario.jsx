@@ -37,15 +37,7 @@ function Formulario() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
+    <div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{

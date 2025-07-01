@@ -4,7 +4,7 @@ import "./App.css";
 function App() {
   return (
     <div className="app-page">
-      <h1 className="titulo">Título</h1>
+      <h1 className="titulo">Cadastrar pessoa</h1>
       <div className="app-container">
         <Formulario />
       </div>
