@@ -2,19 +2,19 @@ import { useForm, Controller } from "react-hook-form";
 import Cleave from "cleave.js/react";
 
 function Formulario() {
-  const { control, handleSubmit, watch } = useForm();
+  const { control, handleSubmit, watch, reset } = useForm();
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
   // Garante que a data esteja no formato yyyy-mm-dd
-  const onSubmit = async (data) => {
-    console.log("Antes da conversão:", data.dataNascimento);
+const onSubmit = async (data) => {
+  console.log("Antes da conversão:", data.dataNascimento);
 
-    if (data.dataNascimento && data.dataNascimento.includes("-")) {
-      const [d, m, y] = data.dataNascimento.split("-");
-      if (d.length === 2 && m.length === 2 && y.length === 4) {
-        data.dataNascimento = `${y}-${m}-${d}`;
-      }
+  if (data.dataNascimento && data.dataNascimento.includes("-")) {
+    const [d, m, y] = data.dataNascimento.split("-");
+    if (d.length === 2 && m.length === 2 && y.length === 4) {
+      data.dataNascimento = `${y}-${m}-${d}`;
     }
+  }
     try {
       const response = await fetch("http://localhost:8080/api/person/create", {
         method: "POST",
@@ -30,6 +30,7 @@ function Formulario() {
       alert("Pessoa cadastrada com sucesso!");
 
       reset();
+
     } catch (error) {
       console.error("Erro:", error);
       alert("Erro ao cadastrar: " + error.message);
