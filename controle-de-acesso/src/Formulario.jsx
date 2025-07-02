@@ -7,13 +7,14 @@ function Formulario() {
 
   // Garante que a data esteja no formato yyyy-mm-dd
   const onSubmit = async (data) => {
-    if (data.dataNascimento.includes("-")) {
+    console.log("Antes da conversão:", data.dataNascimento);
+
+    if (data.dataNascimento && data.dataNascimento.includes("-")) {
       const [d, m, y] = data.dataNascimento.split("-");
       if (d.length === 2 && m.length === 2 && y.length === 4) {
         data.dataNascimento = `${y}-${m}-${d}`;
       }
     }
-
     try {
       const response = await fetch("http://localhost:8080/api/person/create", {
         method: "POST",
@@ -27,6 +28,8 @@ function Formulario() {
       }
 
       alert("Pessoa cadastrada com sucesso!");
+
+      reset();
     } catch (error) {
       console.error("Erro:", error);
       alert("Erro ao cadastrar: " + error.message);
@@ -78,31 +81,47 @@ function Formulario() {
       </div>
 
       {/* Data de nascimento */}
-      <div>
-        <label>Data de Nascimento</label>
-        <Controller
-          name="dataNascimento"
-          control={control}
-          defaultValue=""
-          rules={{ required: "A data de nascimento é obrigatória" }}
-          render={({ field, fieldState }) => (
-            <>
-              <Cleave
-                {...field}
-                options={{
-                  blocks: [2, 2, 4],
-                  delimiters: ["-", "-"],
-                  numericOnly: true,
-                }}
-                placeholder="dd-mm-aaaa"
-              />
-              {fieldState.error && (
-                <span style={{ color: "red" }}>{fieldState.error.message}</span>
-              )}
-            </>
-          )}
-        />
-      </div>
+      <Controller
+        name="dataNascimento"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "A data de nascimento é obrigatória",
+          validate: (value) => {
+            if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) {
+              return "Formato inválido (esperado: dd-mm-aaaa)";
+            }
+
+            const [dd, mm, yyyy] = value.split("-").map(Number);
+            const date = new Date(`${yyyy}-${mm}-${dd}`);
+
+            // verifica se os componentes da data estão corretos
+            const isValid =
+              date &&
+              date.getDate() === dd &&
+              date.getMonth() + 1 === mm &&
+              date.getFullYear() === yyyy;
+
+            return isValid || "Data inválida";
+          },
+        }}
+        render={({ field, fieldState }) => (
+          <>
+            <Cleave
+              {...field}
+              options={{
+                blocks: [2, 2, 4],
+                delimiters: ["-", "-"],
+                numericOnly: true,
+              }}
+              placeholder="dd-mm-aaaa"
+            />
+            {fieldState.error && (
+              <span style={{ color: "red" }}>{fieldState.error.message}</span>
+            )}
+          </>
+        )}
+      />
 
       {/* Tipo de Documento */}
       <div>
