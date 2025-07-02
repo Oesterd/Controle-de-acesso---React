@@ -6,14 +6,15 @@ function Formulario() {
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
   // Garante que a data esteja no formato yyyy-mm-dd
-  const onSubmit = async (data) => {
-    if (data.dataNascimento.includes("-")) {
-      const [d, m, y] = data.dataNascimento.split("-");
-      if (d.length === 2 && m.length === 2 && y.length === 4) {
-        data.dataNascimento = `${y}-${m}-${d}`;
-      }
-    }
+const onSubmit = async (data) => {
+  console.log("Antes da conversão:", data.dataNascimento);
 
+  if (data.dataNascimento && data.dataNascimento.includes("-")) {
+    const [d, m, y] = data.dataNascimento.split("-");
+    if (d.length === 2 && m.length === 2 && y.length === 4) {
+      data.dataNascimento = `${y}-${m}-${d}`;
+    }
+  }
     try {
       const response = await fetch("http://localhost:8080/api/person/create", {
         method: "POST",
@@ -27,6 +28,9 @@ function Formulario() {
       }
 
       alert("Pessoa cadastrada com sucesso!");
+
+      reset();
+
     } catch (error) {
       console.error("Erro:", error);
       alert("Erro ao cadastrar: " + error.message);
