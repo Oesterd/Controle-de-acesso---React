@@ -6,16 +6,12 @@ function Formulario() {
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
   const onSubmit = async (data) => {
-    console.log("Antes da conversão:", data.dataNascimento);
-
-    if (data.dataNascimento && data.dataNascimento.includes("-")) {
+    if (data.dataNascimento.includes("-")) {
       const [d, m, y] = data.dataNascimento.split("-");
       if (d.length === 2 && m.length === 2 && y.length === 4) {
         data.dataNascimento = `${y}-${m}-${d}`;
       }
     }
-
-    console.log("Depois da conversão:", data.dataNascimento); // DEVE mostrar: 1990-04-29
 
     try {
       const response = await fetch("http://localhost:8080/api/person/create", {
@@ -37,103 +33,109 @@ function Formulario() {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          padding: "24px",
-          borderRadius: "8px",
-          backgroundColor: "white",
-          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-          width: "100%",
-          maxWidth: "400px",
-        }}
-      >
-        {/* Nome */}
-        <div>
-          <label>Nome</label>
-          <Controller
-            name="nome"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                placeholder="Digite seu nome"
-                style={{ width: "100%", padding: "8px" }}
-              />
-            )}
-          />
-        </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="formulario">
+      {/* Nome */}
+      <div>
+        <label>Nome</label>
+        <Controller
+          name="nome"
+          control={control}
+          defaultValue=""
+          rules={{ required: "O nome é obrigatório" }}
+          render={({ field, fieldState }) => (
+            <>
+              <input {...field} placeholder="Digite seu nome" />
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        {/* Status */}
-        <div>
-          <label>Status</label>
-          <Controller
-            name="status"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <select {...field} style={{ width: "100%", padding: "8px" }}>
+      {/* Status */}
+      <div>
+        <label>Status</label>
+        <Controller
+          name="status"
+          control={control}
+          defaultValue=""
+          rules={{ required: "O status é obrigatório" }}
+          render={({ field, fieldState }) => (
+            <>
+              <select {...field}>
                 <option value="">Selecione</option>
                 <option value="ATIVO">ATIVO</option>
                 <option value="INATIVO">INATIVO</option>
               </select>
-            )}
-          />
-        </div>
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        {/* Data de Nascimento */}
-        <div>
-          <label>Data de Nascimento</label>
-          <Controller
-            name="dataNascimento"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
+      {/* Data de nascimento */}
+      <div>
+        <label>Data de Nascimento</label>
+        <Controller
+          name="dataNascimento"
+          control={control}
+          defaultValue=""
+          rules={{ required: "A data de nascimento é obrigatória" }}
+          render={({ field, fieldState }) => (
+            <>
               <Cleave
                 {...field}
                 options={{
-                  blocks: [4, 2, 2],
+                  blocks: [2, 2, 4],
                   delimiters: ["-", "-"],
                   numericOnly: true,
                 }}
-                placeholder="aaaa-mm-dd"
-                style={{ width: "100%", padding: "8px" }}
+                placeholder="dd-mm-aaaa"
               />
-            )}
-          />
-        </div>
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        {/* Tipo de Documento */}
-        <div>
-          <label>Tipo de Documento</label>
-          <Controller
-            name="tipoDocumento"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <select {...field} style={{ width: "100%", padding: "8px" }}>
+      {/* Tipo de Documento */}
+      <div>
+        <label>Tipo de Documento</label>
+        <Controller
+          name="tipoDocumento"
+          control={control}
+          defaultValue=""
+          rules={{ required: "O tipo de documento é obrigatório" }}
+          render={({ field, fieldState }) => (
+            <>
+              <select {...field}>
                 <option value="">Selecione</option>
                 <option value="CPF">CPF</option>
                 <option value="RG">RG</option>
               </select>
-            )}
-          />
-        </div>
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        {/* Documento */}
-        <div>
-          <label>Documento</label>
-          <Controller
-            name="documento"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
+      {/* Documento */}
+      <div>
+        <label>Documento</label>
+        <Controller
+          name="documento"
+          control={control}
+          defaultValue=""
+          rules={{ required: "O documento é obrigatório" }}
+          render={({ field, fieldState }) => (
+            <>
               <Cleave
                 {...field}
                 options={
@@ -152,20 +154,25 @@ function Formulario() {
                 placeholder={
                   tipoDocumento === "RG" ? "00.000.000-0" : "000.000.000-00"
                 }
-                style={{ width: "100%", padding: "8px" }}
               />
-            )}
-          />
-        </div>
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        {/* Celular */}
-        <div>
-          <label>Celular</label>
-          <Controller
-            name="celular"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
+      {/* Celular */}
+      <div>
+        <label>Celular</label>
+        <Controller
+          name="celular"
+          control={control}
+          defaultValue=""
+          rules={{ required: "O celular é obrigatório" }}
+          render={({ field, fieldState }) => (
+            <>
               <Cleave
                 {...field}
                 options={{
@@ -174,27 +181,17 @@ function Formulario() {
                   numericOnly: true,
                 }}
                 placeholder="(00) 00000-0000"
-                style={{ width: "100%", padding: "8px" }}
               />
-            )}
-          />
-        </div>
+              {fieldState.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
+        />
+      </div>
 
-        <button
-          type="submit"
-          style={{
-            padding: "10px",
-            fontWeight: "bold",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-          }}
-        >
-          Enviar
-        </button>
-      </form>
-    </div>
+      <button type="submit">Enviar</button>
+    </form>
   );
 }
 
