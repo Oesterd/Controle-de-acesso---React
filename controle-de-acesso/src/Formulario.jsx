@@ -5,6 +5,7 @@ function Formulario() {
   const { control, handleSubmit, watch } = useForm();
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
+  // Garante que a data esteja no formato yyyy-mm-dd
   const onSubmit = async (data) => {
     if (data.dataNascimento.includes("-")) {
       const [d, m, y] = data.dataNascimento.split("-");
@@ -127,6 +128,7 @@ function Formulario() {
       </div>
 
       {/* Documento */}
+      {/* Documento */}
       <div>
         <label>Documento</label>
         <Controller
@@ -136,25 +138,29 @@ function Formulario() {
           rules={{ required: "O documento é obrigatório" }}
           render={({ field, fieldState }) => (
             <>
-              <Cleave
-                {...field}
-                options={
-                  tipoDocumento === "RG"
-                    ? {
-                        blocks: [2, 3, 3, 1],
-                        delimiters: [".", ".", "-"],
-                        numericOnly: true,
-                      }
-                    : {
-                        blocks: [3, 3, 3, 2],
-                        delimiters: [".", ".", "-"],
-                        numericOnly: true,
-                      }
-                }
-                placeholder={
-                  tipoDocumento === "RG" ? "00.000.000-0" : "000.000.000-00"
-                }
-              />
+              {tipoDocumento === "CPF" ? (
+                <Cleave
+                  {...field}
+                  options={{
+                    blocks: [3, 3, 3, 2],
+                    delimiters: [".", ".", "-"],
+                    numericOnly: true,
+                  }}
+                  placeholder="000.000.000-00"
+                />
+              ) : (
+                <input
+                  {...field}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={9}
+                  placeholder="000000000"
+                  onChange={(e) => {
+                    const onlyNumbers = e.target.value.replace(/\D/g, "");
+                    field.onChange(onlyNumbers);
+                  }}
+                />
+              )}
               {fieldState.error && (
                 <span style={{ color: "red" }}>{fieldState.error.message}</span>
               )}

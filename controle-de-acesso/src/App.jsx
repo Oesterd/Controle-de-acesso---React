@@ -1,6 +1,8 @@
 import Formulario from "./Formulario";
 import "./App.css";
 
+console.log("RENDER")
+
 function App() {
   return (
     <div className="app-page">
