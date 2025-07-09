@@ -187,7 +187,19 @@ function Formulario() {
             name="documento"
             control={control}
             defaultValue=""
-            rules={{ required: "O documento é obrigatório" }}
+            rules={{
+              required: "O documento é obrigatório",
+              validate: (value) => {
+                const onlyNumbers = value.replace(/\D/g, "");
+                if (tipoDocumento === "CPF") {
+                  return onlyNumbers.length === 11 || "CPF inválido";
+                }
+                if (tipoDocumento === "RG") {
+                  return onlyNumbers.length === 9 || "RG inválido";
+                }
+                return true;
+              },
+            }}
             render={({ field, fieldState }) => (
               <>
                 {tipoDocumento === "CPF" ? (
@@ -203,14 +215,9 @@ function Formulario() {
                 ) : (
                   <input
                     {...field}
-                    type="text"
                     inputMode="numeric"
-                    maxLength={9}
                     placeholder="000000000"
-                    onChange={(e) => {
-                      const onlyNumbers = e.target.value.replace(/\D/g, "");
-                      field.onChange(onlyNumbers);
-                    }}
+                    maxLength={9}
                   />
                 )}
                 {fieldState.error && (
@@ -230,7 +237,13 @@ function Formulario() {
             name="celular"
             control={control}
             defaultValue=""
-            rules={{ required: "O celular é obrigatório" }}
+            rules={{
+              required: "O celular é obrigatório",
+              validate: (value) => {
+                const onlyNumbers = value.replace(/\D/g, "");
+                return onlyNumbers.length === 11 || "Celular inválido";
+              },
+            }}
             render={({ field, fieldState }) => (
               <>
                 <Cleave
