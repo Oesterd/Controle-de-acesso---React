@@ -1,16 +1,17 @@
+import Home from "./Home"
 import Formulario from "./Formulario";
 import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-console.log("RENDER")
 
 function App() {
   return (
-    <div className="app-page">
-      <h1 className="titulo">Cadastrar pessoa</h1>
-      <div className="app-container">
-        <Formulario />
-      </div>
-    </div>
+    <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/form" element={<Formulario />} />
+        </Routes>
+    </Router>
   );
 }
 
