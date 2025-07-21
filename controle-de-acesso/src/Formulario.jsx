@@ -7,16 +7,14 @@ function Formulario() {
   const { control, handleSubmit, watch, reset } = useForm();
   const tipoDocumento = watch("tipoDocumento") || "CPF";
 
-  // Garante que a data esteja no formato yyyy-mm-dd
   const onSubmit = async (data) => {
-    console.log("Antes da conversão:", data.dataNascimento);
-
     if (data.dataNascimento && data.dataNascimento.includes("-")) {
       const [d, m, y] = data.dataNascimento.split("-");
       if (d.length === 2 && m.length === 2 && y.length === 4) {
         data.dataNascimento = `${y}-${m}-${d}`;
       }
     }
+
     try {
       const response = await fetch("http://localhost:8080/api/person/create", {
         method: "POST",
@@ -30,7 +28,6 @@ function Formulario() {
       }
 
       alert("Pessoa cadastrada com sucesso!");
-
       reset();
       navigate("/");
     } catch (error) {
@@ -39,35 +36,35 @@ function Formulario() {
     }
   };
 
+
   return (
-    <div
+    <div className="form-field"
       style={{
-        width: "100vw", // ocupa toda a largura da tela
-        height: "100vh", // ocupa toda a altura da tela
-        display: "flex", // ativa o flexbox
-        justifyContent: "center", // centraliza na horizontal
-        alignItems: "center", // centraliza na vertical
-        backgroundColor: "#f5f5f5", // mesma cor de fundo
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
       }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="formulario"
         style={{
+          backgroundColor: "#fff",
+          padding: "32px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          width: "100%",
+          maxWidth: "400px",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
-          padding: "24px",
-          borderRadius: "8px",
-          backgroundColor: "white",
-          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-          width: "100%", // ocupa toda a largura disponível
-          maxWidth: "400px", // limita a largura máxima
         }}
       >
         {/* Nome */}
-        <div>
-          <label>Nome</label>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Nome</label>
           <Controller
             name="nome"
             control={control}
@@ -77,9 +74,7 @@ function Formulario() {
               <>
                 <input {...field} placeholder="Digite seu nome" />
                 {fieldState.error && (
-                  <span style={{ color: "red" }}>
-                    {fieldState.error.message}
-                  </span>
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
                 )}
               </>
             )}
@@ -87,8 +82,8 @@ function Formulario() {
         </div>
 
         {/* Status */}
-        <div>
-          <label>Status</label>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Status</label>
           <Controller
             name="status"
             control={control}
@@ -102,9 +97,7 @@ function Formulario() {
                   <option value="INATIVO">INATIVO</option>
                 </select>
                 {fieldState.error && (
-                  <span style={{ color: "red" }}>
-                    {fieldState.error.message}
-                  </span>
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
                 )}
               </>
             )}
@@ -112,51 +105,48 @@ function Formulario() {
         </div>
 
         {/* Data de nascimento */}
-        <Controller
-          name="dataNascimento"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: "A data de nascimento é obrigatória",
-            validate: (value) => {
-              if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) {
-                return "Formato inválido (esperado: dd-mm-aaaa)";
-              }
-
-              const [dd, mm, yyyy] = value.split("-").map(Number);
-              const date = new Date(`${yyyy}-${mm}-${dd}`);
-
-              // verifica se os componentes da data estão corretos
-              const isValid =
-                date &&
-                date.getDate() === dd &&
-                date.getMonth() + 1 === mm &&
-                date.getFullYear() === yyyy;
-
-              return isValid || "Data inválida";
-            },
-          }}
-          render={({ field, fieldState }) => (
-            <>
-              <Cleave
-                {...field}
-                options={{
-                  blocks: [2, 2, 4],
-                  delimiters: ["-", "-"],
-                  numericOnly: true,
-                }}
-                placeholder="dd-mm-aaaa"
-              />
-              {fieldState.error && (
-                <span style={{ color: "red" }}>{fieldState.error.message}</span>
-              )}
-            </>
-          )}
-        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Data de Nascimento</label>
+          <Controller
+            name="dataNascimento"
+            control={control}
+            defaultValue=""
+            rules={{
+              required: "A data de nascimento é obrigatória",
+              validate: (value) => {
+                if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return "Formato inválido (dd-mm-aaaa)";
+                const [dd, mm, yyyy] = value.split("-").map(Number);
+                const date = new Date(`${yyyy}-${mm}-${dd}`);
+                return (
+                  date &&
+                  date.getDate() === dd &&
+                  date.getMonth() + 1 === mm &&
+                  date.getFullYear() === yyyy
+                ) || "Data inválida";
+              },
+            }}
+            render={({ field, fieldState }) => (
+              <>
+                <Cleave
+                  {...field}
+                  options={{
+                    blocks: [2, 2, 4],
+                    delimiters: ["-", "-"],
+                    numericOnly: true,
+                  }}
+                  placeholder="dd-mm-aaaa"
+                />
+                {fieldState.error && (
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
+                )}
+              </>
+            )}
+          />
+        </div>
 
         {/* Tipo de Documento */}
-        <div>
-          <label>Tipo de Documento</label>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Tipo de Documento</label>
           <Controller
             name="tipoDocumento"
             control={control}
@@ -170,9 +160,7 @@ function Formulario() {
                   <option value="RG">RG</option>
                 </select>
                 {fieldState.error && (
-                  <span style={{ color: "red" }}>
-                    {fieldState.error.message}
-                  </span>
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
                 )}
               </>
             )}
@@ -180,9 +168,8 @@ function Formulario() {
         </div>
 
         {/* Documento */}
-        {/* Documento */}
-        <div>
-          <label>Documento</label>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Documento</label>
           <Controller
             name="documento"
             control={control}
@@ -191,12 +178,8 @@ function Formulario() {
               required: "O documento é obrigatório",
               validate: (value) => {
                 const onlyNumbers = value.replace(/\D/g, "");
-                if (tipoDocumento === "CPF") {
-                  return onlyNumbers.length === 11 || "CPF inválido";
-                }
-                if (tipoDocumento === "RG") {
-                  return onlyNumbers.length === 9 || "RG inválido";
-                }
+                if (tipoDocumento === "CPF") return onlyNumbers.length === 11 || "CPF inválido";
+                if (tipoDocumento === "RG") return onlyNumbers.length === 9 || "RG inválido";
                 return true;
               },
             }}
@@ -221,9 +204,7 @@ function Formulario() {
                   />
                 )}
                 {fieldState.error && (
-                  <span style={{ color: "red" }}>
-                    {fieldState.error.message}
-                  </span>
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
                 )}
               </>
             )}
@@ -231,8 +212,8 @@ function Formulario() {
         </div>
 
         {/* Celular */}
-        <div>
-          <label>Celular</label>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label style={{ fontWeight: "bold", color: "#000" }}>Celular</label>
           <Controller
             name="celular"
             control={control}
@@ -256,16 +237,29 @@ function Formulario() {
                   placeholder="(00) 00000-0000"
                 />
                 {fieldState.error && (
-                  <span style={{ color: "red" }}>
-                    {fieldState.error.message}
-                  </span>
+                  <span style={{ color: "red" }}>{fieldState.error.message}</span>
                 )}
               </>
             )}
           />
         </div>
 
-        <button type="submit">Enviar</button>
+        {/* Botão de envio */}
+        <button
+          type="submit"
+          style={{
+            marginTop: "8px",
+            padding: "10px 20px",
+            backgroundColor: "#000",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          Enviar
+        </button>
       </form>
     </div>
   );

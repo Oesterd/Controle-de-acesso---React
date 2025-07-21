@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+
 
 function Home() {
+
   return (
     <div
       style={{
@@ -14,8 +17,7 @@ function Home() {
         gap: "20px",              // espaçamento entre os elementos
       }}
     >
-      <h1 style={{ textAlign: "center" }}>Bem-vindo ao sistema de controle de acesso</h1>
-
+      <h1 style={{ textAlign: "center", color: "black" }}>Bem-vindo ao sistema de controle de acesso</h1>
       <Link to="/form">
         <button
           style={{
