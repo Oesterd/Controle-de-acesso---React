@@ -113,17 +113,7 @@ function Formulario() {
             defaultValue=""
             rules={{
               required: "A data de nascimento é obrigatória",
-              validate: (value) => {
-                if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return "Formato inválido (dd-mm-aaaa)";
-                const [dd, mm, yyyy] = value.split("-").map(Number);
-                const date = new Date(`${yyyy}-${mm}-${dd}`);
-                return (
-                  date &&
-                  date.getDate() === dd &&
-                  date.getMonth() + 1 === mm &&
-                  date.getFullYear() === yyyy
-                ) || "Data inválida";
-              },
+
             }}
             render={({ field, fieldState }) => (
               <>
